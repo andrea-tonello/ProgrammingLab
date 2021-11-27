@@ -10,7 +10,7 @@ def statistiche(lista):
         else:
             print("La lista inserita non è composta da soli interi")
             exit()
-#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
     somma = 0
     for item in lista:
         somma = somma+item
@@ -28,7 +28,7 @@ def statistiche(lista):
     return final_list
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 def somma_vettoriale(lista, lista2):
-    final_list = []
+    final_list = 0
     for item in lista or lista2:
         if type(item)!=int:
             print("Le liste accettano solo valori interi")
@@ -42,7 +42,7 @@ def somma_vettoriale(lista, lista2):
     return final_list   
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++   
 
-my_list = [6,4,3,1.5]
+my_list = [6,4,3,1]
 my_list2 = [7,8,9,0]
 
 stampa(my_list)
