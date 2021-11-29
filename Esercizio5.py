@@ -16,6 +16,16 @@ class Automobile():
             print("Le due auto sono uguali")
         else:
             print("Le due auto sono diverse")
+
+class Transformer(Automobile):
+    def __init__(self, nome, generazione, grado, schieramento):
+        self.nome = nome
+        self.generazione = generazione
+        self.grado = grado
+        self.schieramento = schieramento
+    
+    def scheda_militare(self):
+        return "Caratteristiche tecniche: {}, {}, {}, {}".format(self.nome, self.generazione, self.grado, self.schieramento)
         
 
 auto1 = Automobile('Alfa Romeo', '33 Stradale', '2', 'PN 256 IT')
@@ -28,5 +38,10 @@ auto1.parla()
 
 auto1.confronta(auto2)
 auto1.confronta(auto3)
+
+print("\n")
+
+transformerAlfa = Transformer('Optimus Prime', 'Gen 1', 'Capitano', 'Autobot')
+print(transformerAlfa.scheda_militare())
 
 
