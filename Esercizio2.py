@@ -13,7 +13,7 @@ def shampoo_dates():
     return dates
     file.close()
 
-print("Dates:\n")
+print("Dates:")
 date_finali = shampoo_dates()
 for line in date_finali:
     print(line.strftime('%d - %b - %Y'))

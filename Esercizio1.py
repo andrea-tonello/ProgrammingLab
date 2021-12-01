@@ -28,14 +28,14 @@ def statistiche(lista):
     return final_list
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 def somma_vettoriale(lista, lista2):
-    final_list = 0
     for item in lista or lista2:
         if type(item)!=int:
             print("Le liste accettano solo valori interi")
             return final_list
             exit()
     if len(lista)==len(lista2):
-        final_list = sum(lista) + sum(lista2)
+        zipped_lists = zip(lista, lista2)
+        final_list = [i + j for (i,j) in zipped_lists]
     else:
         print("Le liste non sono della stessa lunghezza")
     

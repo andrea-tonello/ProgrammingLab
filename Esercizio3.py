@@ -38,9 +38,8 @@ dates = mio_oggetto.get_date_vendite()
 for line in dates:
     print(line)
 
-print("\n")
+print()
 
 header = mio_oggetto.__str__()
 print(header)
-
 

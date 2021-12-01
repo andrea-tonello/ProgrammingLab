@@ -8,7 +8,8 @@ class CSVFile():
         valori=[]
         file=open(self.file,'r')
         for line in file:
-            elements = line.split(',') 
+            elements = line.split(',')
+            elements[-1] = elements[-1].strip()
 
             valori.append(elements)
         return valori

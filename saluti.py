@@ -1,28 +1,11 @@
-class Polygon:
-    def __init__(self, sides):
-        self.sides = sides
+x = '6.0'
 
-    def display_info(self):
-        print("A polygon is a two dimensional shape with straight lines")
-
-    def get_perimeter(self):
-        perimeter = sum(self.sides)
-        return perimeter
-
-
-class Triangle(Polygon):
-    def display_info(self):
-        print("A triangle is a polygon with 3 edges")
-        # Polygon.display_info(self)
-        super().display_info()
-
-class Quadrilateral(Polygon):
-    def display_info(self):
-        print("A quadrilateral is a polygon with 4 edges")
-
-t1 = Triangle([5, 6, 7])
-perimeter = t1.get_perimeter()
-print("Perimeter:", perimeter)
-
-t1.display_info()
-
+try:
+    x = int(x)
+    print('Posso convertire')
+    print(x)
+except ValueError as cac:
+    print('Non posso convertire, porto x a 0')
+    x = 0
+    print(x)
+    print('Errore di Valore: {}'.format(cac))
