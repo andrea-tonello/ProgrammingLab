@@ -6,12 +6,16 @@ class CSVFile():
 
     def get_data(self):
         valori=[]
+        
         file=open(self.file,'r')
+        
         for line in file:
             elements = line.split(',')
             elements[-1] = elements[-1].strip()
 
             valori.append(elements)
+        
+        file.close()
         return valori
 
 valori = []
