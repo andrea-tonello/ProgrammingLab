@@ -38,18 +38,22 @@ def somma():
         if elements[0] != 'Date' and elements[1] != 'Sales':
             lista_delle_date=elements[0]
             lista_di_valori=elements[1]
-
+            
+            valori.append(lista_delle_date)
             valori.append(float(lista_di_valori))
        
     
-    for numeri in valori:
+    '''for numeri in valori:
         risultato=risultato + numeri
-    return risultato
+    return risultato'''
+    return valori
     
     myfile.close()
 
+valori = somma()
 
-print(somma())
+for item in valori:
+    print(item)
     
 
 

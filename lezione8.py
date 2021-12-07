@@ -1,3 +1,7 @@
+def separator():
+    print('---------------------------------')
+
+
 class CSVFile():
     
     def __init__(self,file):
@@ -38,6 +42,8 @@ class FloatCSVFile(CSVFile):
             float_row = []
             
             for i,element in enumerate(og_row):
+#i==0 indica il primo elemento per og row, quindi la stringa della data,
+#di cui non me ne frega niente perchè io voglio ottenere una lista con le vendite
                 if i==0:
                     pass
                 else:
@@ -68,11 +74,14 @@ class IncrementModel(Model):
         l = len(all_data)
 
         for i in range(0, l-1):
+#one_month conta la differenza tra il mese corrente ed il precedente
             one_month = all_data[i+1] - all_data[i]
+#values_per_month contiene tutte le differenze 
             values_per_month.append(one_month)
         
         somma_vpm = sum(values_per_month)
         lung_vpm = len(values_per_month)
+#avg_vpm fa una media tra tutte le differenze mese per mese
         avg_vpm = somma_vpm / lung_vpm
 
         pred_result = data[-1] + avg_vpm
@@ -89,6 +98,10 @@ mia_lista_flat = []
 for item in mia_lista:
     mia_lista_flat = mia_lista_flat + item
 
-mio_oggetto2 = IncrementModel()
-result = mio_oggetto2.predict(mia_lista_flat)
-print(result)
+separator()
+
+obj_incr_prevision = IncrementModel()
+result = obj_incr_prevision.predict(mia_lista_flat)
+print('Le vendite previste per il mese successivo sono:\n{}'.format(result))
+
+separator()

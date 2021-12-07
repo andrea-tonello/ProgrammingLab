@@ -1,7 +1,6 @@
 class CSVFile():
     
-    def __init__(self,name,file):
-        self.nome = name
+    def __init__(self, file):
         self.file = file
 
     def get_data(self):
@@ -11,7 +10,7 @@ class CSVFile():
         
         for line in file:
             elements = line.split(',')
-            elements[-1] = elements[-1].strip()
+            elements[-1] = elements[-1].strip('\n')
 
             valori.append(elements)
         
@@ -19,7 +18,7 @@ class CSVFile():
         return valori
 
 valori = []
-mio_oggetto = CSVFile('Vendite', 'shampoo_sales.csv')
+mio_oggetto = CSVFile('shampoo_sales_2.csv')
 valori = mio_oggetto.get_data()
 for line in valori:
     print(line)
