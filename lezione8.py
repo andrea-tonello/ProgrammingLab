@@ -4,7 +4,7 @@ def separator():
 
 class CSVFile():
     
-    def __init__(self,file):
+    def __init__(self, file):
         self.filename = file
 
         self.can_read = True
@@ -14,6 +14,8 @@ class CSVFile():
         except Exception as e:
             self.can_read = False
             print(f'Errore in apertura del file:\n{e}')
+
+    
 
     def get_data(self):
         if not self.can_read:
@@ -57,6 +59,11 @@ class FloatCSVFile(CSVFile):
         
         return float_data
 
+    def write(self, line):
+        my_file = open(self.filename, 'a')
+        my_file.write('\n'+line)
+        my_file.close()
+
     
 class Model():
     def fit(self, data):
@@ -89,7 +96,7 @@ class IncrementModel(Model):
         return pred_result
 
 
-miei_valori = FloatCSVFile('shampoo_sales.csv')
+miei_valori = FloatCSVFile('shampoo_sales_3.csv')
 mia_lista = miei_valori.get_data()
 
 #mia_lista è fatta così: [[a], [b], [c]...] ma a me serve = [a, b, c...]
@@ -102,6 +109,15 @@ separator()
 
 obj_incr_prevision = IncrementModel()
 result = obj_incr_prevision.predict(mia_lista_flat)
-print('Le vendite previste per il mese successivo sono:\n{}'.format(result))
+lista_finale = []
+for item in mia_lista_flat:
+    lista_finale.append(item)
+lista_finale.append(result)
+
+for item in lista_finale:
+    print(item)
+print('Le vendite previste per il mese successivo sono:\n{}'.format(round(result,1)))
 
 separator()
+
+miei_valori.write('01-01-2015,'+ str(round(result,1)))

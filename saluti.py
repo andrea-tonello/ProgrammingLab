@@ -1,94 +1,76 @@
+from matplotlib import pyplot
+
 class CSVFile():
-    
-    def __init__(self,file):
-        self.filename = file
+    def __init__(self, name, file):
+        self.name = name
+        self.file = file
 
-        self.can_read = True
+    def write(self, line):
+        my_file = open(self.file, 'a')
+        my_file.write('\n'+line)
+        my_file.close()
+
+    def get_data(self):
+        my_list = []
         try:
-            f=open(self.filename, 'r')
-            f.readline()
+            my_file = open(self.file, 'r')
+            for line in my_file:
+                elem = line.rstrip().split(',')
+                if elem[0] != 'Date':
+                    my_list.append(elem)
+            my_file.close()
+            return my_list;
         except Exception as e:
-            self.can_read = False
-            print(f'Errore in apertura del file:\n{e}')
+            print('ERROR: Impossibile aprire file "{}"'.format(self.file))
 
-    def get_data(self):
-        if not self.can_read:
-            print('Non è stato possibile aprire il file')
-            exit()
-        else:
-            valori=[]
-            file=open(self.filename,'r')
-            for line in file:
-                elements = line.split(',')
-                elements[-1] = elements[-1].strip()
-                if elements[0] != 'Date':
-                    valori.append(elements)
-            file.close()
-            return valori
-
-#con questa classe voglio convertire i valori dalla colonna due in su a float (da string)
-class FloatCSVFile(CSVFile):
-    
-    def get_data(self):
-        
-        float_data = []
-        og_data = super().get_data()
-        
-        for og_row in og_data:
-            float_row = []
-            
-            for i,element in enumerate(og_row):
-                if i==0:
-                    pass
-                else:
-                    try:
-                        float_row.append(float(element))
-                    except Exception as e:
-                        print(f'Errore di conversione della stringa:\n{e}')
-                        break
-        
-            float_data.append(float_row)
-        
-        return float_data
-
-    
 class Model():
     def fit(self, data):
-        raise NotImplementedError('Metodo non implementato')
+        raise NotImplementedError("Metodo non implementato")
     def predict(self, data):
-        raise NotImplementedError('Metodo non implementato')
+        raise NotImplementedError("Metodo non implementato")        
 
-class IncrementModel(Model):
+class IncrementedModel(Model):
+    def check_data(self, data):
+        if len(data)<2:
+            return 'Impossibile fare previsione, numero di dati insufficienti'
+        else:
+            return True
+    #def preditct(self, data):  
+
+class FitIncrementModel(IncrementedModel):
+    def fit(self, data):
+        if self.check_data(data):
+            inc = 0.0
+            #controllo se ci sono errori nel file come stringhe al posto di float
+            for i in range(0, len(data)-1):
+                inc += float(data[i+1]) - float(data[i])    
+            global_avg_increment = inc/len(data)
+            return global_avg_increment
+        else:
+            print(self.check_data(data))
     
-    def predict(self, data):
-        self.data = data
-        all_data = self.data
+    def predict(self, data, global_avg_increment):
+        prediction = float(data[len(data)-1]) + global_avg_increment
+        data.append(prediction)
+        return data
         
-        values_per_month = []
-        l = len(all_data)
+csvobj = CSVFile('Vendite shampoo', 'shampoo_sales.csv')
+my_list = csvobj.get_data()
+print(my_list)
+data = []
+values = []
+for item in my_list:
+    data.append(item[1])
+fitobj = FitIncrementModel()
 
-        for i in range(0, l-1):
-            one_month = all_data[i+1] - all_data[i]
-            values_per_month.append(one_month)
-        
-        somma_vpm = sum(values_per_month)
-        lung_vpm = len(values_per_month)
-        avg_vpm = somma_vpm / lung_vpm
+#numero di mesi di cui voglio predire i valori
+number_of_months = 12
 
-        pred_result = data[-1] + avg_vpm
-            
-        return pred_result
-
-
-miei_valori = FloatCSVFile('shampoo_sales.csv')
-mia_lista = miei_valori.get_data()
-
-#mia_lista è fatta così: [[a], [b], [c]...] ma a me serve = [a, b, c...]
-#altrimenti nel for di predict non posso sommare a+b+c..., perciò:
-mia_lista_flat = []
-for item in mia_lista:
-    mia_lista_flat = mia_lista_flat + item
-
-mio_oggetto2 = IncrementModel()
-result = mio_oggetto2.predict(mia_lista_flat)
-print(result)
+for i in range(1, number_of_months+1):
+    global_avg_increment = fitobj.fit(data)
+    values = fitobj.predict(data, global_avg_increment)
+    csvobj.write('prediction '+str(i)+','+str(round(values[len(values)-1], 2)))
+    
+pyplot.plot(data, color='tab:blue')
+pyplot.plot(values, color='tab:red')
+pyplot.show()
