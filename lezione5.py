@@ -55,7 +55,7 @@ class FloatCSVFile(CSVFile):
         return float_data
 
 
-mio_oggetto = CSVFile('shampoo_sales_3.csv')
+mio_oggetto = CSVFile(3)
 print(f'LISTA ORIGINALE: "{mio_oggetto.filename}"\n')
 lista1 = mio_oggetto.get_data()
 for line in lista1:

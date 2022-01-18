@@ -43,12 +43,12 @@ pred_data = [475.3,581.3,646.9]
 
 obj1 = IncrementModel()
 prediction = obj1.predict(pred_data)
-print(prediction)
+print(f'Predizione senza fit: {prediction}')
 
 obj2 = FitIncrementModel()
 obj2.fit(fit_data)
 fitted_prediction = obj2.predict(pred_data)
-print(fitted_prediction)
+print(f'Predizione con fit: {fitted_prediction}')
     
 
 
