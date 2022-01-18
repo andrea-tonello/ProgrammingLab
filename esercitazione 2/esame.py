@@ -44,7 +44,7 @@ class Diff():
         return final_list
 
 diff = Diff()
-res = diff.compute([2,4])
+res = diff.compute([2.1,4,0])
 print(res)
 
 
