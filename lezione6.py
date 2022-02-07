@@ -52,7 +52,7 @@ class CSVFile():
 
 
 
-mio_oggetto = CSVFile(3)
+mio_oggetto = CSVFile('shampoo_sales_3.csv')
 
 try:
     valori = mio_oggetto.get_data(1,8)

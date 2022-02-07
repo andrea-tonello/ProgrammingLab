@@ -41,10 +41,18 @@ class Diff():
             final_list.append((lista[i+1] - lista[i]) / self.ratio)
             i += 1
 
+        '''i=0
+        while i < len(lista)-1:
+            final_list.append(lista[i+1] - lista[i])
+            i += 1
+        
+        for item in final_list:
+            item = item / self.ratio'''
+
         return final_list
 
-diff = Diff()
-res = diff.compute([2.1,4,0])
+diff = Diff(2)
+res = diff.compute([2,4,8,16])
 print(res)
 
 
