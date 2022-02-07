@@ -1,5 +1,13 @@
-lista = [[1,2], ['a', 4], [None]]
-print (lista[1][0])
+class ExamException(Exception):
+    pass
 
-uno = lista[1]
-print(uno[0])
+class ExamException(Exception):
+    pass
+
+def func(lista = None, altro = None):
+    if lista == None:
+        raise ExamException('lista nulla')
+    return lista[0]
+
+print(func())
+

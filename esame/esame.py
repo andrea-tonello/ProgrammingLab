@@ -35,12 +35,36 @@ class CSVTimeSeriesFile():
 
         return valori
 
-def compute_avg_monthly_difference(time_series, first_year, last_year):
-    #final_values = []
+
+#ricorda: devo passare time_series già sanitizzata altrimenti è uno scazzo
+def compute_avg_monthly_difference(time_series=None, first_year=None, last_year=None):
+
+#check esistenza di time_series
+    if time_series == None: raise ExamException('Nessuna lista in input!')
+#type check di time_series
+    if not isinstance(time_series, list): raise ExamException('time series deve essere una lista!')
+#controllo che time_series non sia vuota
+    if len(time_series) == 0: raise ExamException('time_series non contiene alcun dato')
+
+#check esistenza estremi
+    if first_year == None: raise ExamException('Nessun estremo inferiore in input!')
+    if last_year == None: raise ExamException('Nessun estremo superiore in input!')
 #check formato estremi
+    #per qualche motivo usare type(first_year or last_year) causa problemi
+    if type(first_year) != str: raise ExamException('Il formato degli estremi deve essere str!')
+    if type(last_year) != str: raise ExamException('Il formato degli estremi deve essere str!')
+
+#check valore intrinseco degli estremi  !!! RIVEDERE !!!
+    try: int(first_year)
+    except Exception as e: raise ExamException(f'Errore: {e}')
+    try: int(last_year)
+    except: raise ExamException('Il valore degli estremi deve essere un anno, numero intero')
 #check ordine estremi
-    if int(first_year) >= int(last_year): raise ExamException('Controllare la cronologia degli estremi')
-# existence checking sugli estremi 
+    if int(first_year) > int(last_year): raise ExamException('first_year non puo essere maggiore di last_year')
+#check uguaglianza estremi
+    if int(first_year) > int(last_year): raise ExamException('first_year e last_year non possono essere uguali')
+
+#controllo che gli estremi siano in time_series
     check_first = False
     check_last = False
     
@@ -73,4 +97,4 @@ time_series_file = CSVTimeSeriesFile('data.csv')
 time_series = time_series_file.get_data()
 #print(time_series)
 
-print(compute_avg_monthly_difference(time_series, '1965', '1945'))
+print(compute_avg_monthly_difference (time_series, '1949', '1960'))
