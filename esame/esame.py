@@ -25,7 +25,8 @@ class CSVTimeSeriesFile():
         except:
             check_file2 = False    
         if check_file2 == False: raise ExamException ('Impossibile leggere il file')
-        
+
+#inizio a estrarre i dati
         valori = []
         file=open(self.file,'r')
         lines = file.readlines()
@@ -43,7 +44,8 @@ class CSVTimeSeriesFile():
             else: pass
             
             valori.append(minilist)
-            
+
+#mano a mano che aggiungo minilist a valori le controllo per sanitizzarle
             for item in valori:
                 try: datetime.strptime(item[0],'%Y-%m')
                 except: valori.remove(item)
@@ -56,6 +58,8 @@ class CSVTimeSeriesFile():
                 if item[1] == None:
                     valori.remove(item)
 
+#ora che ho valori ripulita procedo con i check di duplicati e di ordine
+#controllo duplicati
         duplicato = any(valori.count(item) > 1 for item in valori)
         if duplicato == True:
             raise ExamException('Ci sono dei valori duplicati!')
@@ -80,8 +84,10 @@ class CSVTimeSeriesFile():
         
         first = year_sort[0]
         last = year_sort[-1]
-        valori_regrouped = []
         
+        #creo una lista in cui creo una sottolista per ogni anno, in modo tale da verificare
+        #la crescenza dei mesi
+        valori_regrouped = []
         for i in range(first, last+1):
             tmplist = []
             for item in valori:
@@ -89,8 +95,6 @@ class CSVTimeSeriesFile():
                 if str(i) == date[0]:
                     tmplist.append(date)
             valori_regrouped.append(tmplist)
-
-        print()
             
         #ora che valori_regrouped è organizzata per anno, faccio il check su ogni mese per ogni anno
         order_check2 = True
@@ -110,7 +114,7 @@ class CSVTimeSeriesFile():
 
 
         
-#mi serve a trovare il primo anno assoluto presente nel file
+#funzione che mi serve a trovare il primo anno assoluto presente nel file
 def find_first(time_series):
     i=0
     res = 0
@@ -124,10 +128,8 @@ def find_first(time_series):
         i += 1
     
 
-
-
         
-#ricorda: devo passare time_series già sanitizzata altrimenti è uno scazzo
+
 def compute_avg_monthly_difference(time_series=None, first_year=None, last_year=None):
 
 #-------------[CONTROLLO TIME_SERIES]-------------
@@ -192,6 +194,7 @@ def compute_avg_monthly_difference(time_series=None, first_year=None, last_year=
     if check_last == False: raise ExamException('Controllare l\'estremo superiore')
 #-----------------------------------------------------------
 
+#Riempio i "buchi" creatisi per gli eventuali mesi mancanti"------------------------
     first = int(first_year)
     last = int(last_year)
     total_years = last - first + 1
@@ -223,6 +226,7 @@ def compute_avg_monthly_difference(time_series=None, first_year=None, last_year=
                     filled_time_series[i][j] = element
 
     flat_time_series = [item for sublist in filled_time_series for item in sublist]
+#--------------------------------------------------------------------------------------
 
 #val_per_month[i] conterrà tutti i valori (numero di passeggeri) dell'i-esimo mese
     val_per_month = []
@@ -231,7 +235,9 @@ def compute_avg_monthly_difference(time_series=None, first_year=None, last_year=
 
     #devo cercare il primo anno presente in time_series
     true_first = (find_first(flat_time_series))
-    
+
+    #devo fare questa operazione con month_index perché altrimenti se il first_year in input 
+    #non è il 'primo assoluto' in time_series, la conta dei valori risulterà sfasata   
     month_index = (first - true_first) * 12
     for i in range(0, 12):
         sum = 0
@@ -240,15 +246,17 @@ def compute_avg_monthly_difference(time_series=None, first_year=None, last_year=
             sum += 12
         month_index += 1
     
-    for month in val_per_month:
-        print(month)
-    print()
-#tolgo i valori nulli-------------------------------------------------
+#    for month in val_per_month:
+#       print(month)
+#    print()
+        
+#tolgo i valori non conteggiabili-------------------------------------------------
     val_per_month = [[value for value in month if value > -1] for month in val_per_month]
     
-    for month in val_per_month:
-        print(month)
-    print()
+#    for month in val_per_month:
+#        print(month)
+#    print()
+    
 #calcolo l'incremento------------------------------------------------
     results = []
     for month in val_per_month:
@@ -264,10 +272,3 @@ def compute_avg_monthly_difference(time_series=None, first_year=None, last_year=
             results.append(res / (len(month)-1))
 
     return results
-            
-    
-time_series_file = CSVTimeSeriesFile('data(copy).csv')
-time_series = time_series_file.get_data()
-#print(time_series)
-
-print(compute_avg_monthly_difference (time_series, '1950', '1951'))
