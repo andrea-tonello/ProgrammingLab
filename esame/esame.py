@@ -32,23 +32,28 @@ class CSVTimeSeriesFile():
         
         for line in lines:
             minilist = []  # = item della lista annidata
-            elements = line.split(',')
-            elements[-1] = elements[-1].strip()
-            try: minilist.append(str(elements[0]))
-            except: pass
-            try: minilist.append(elements[1])
-            except: pass
+            elements = 0
+            if ',' in line:
+                elements = line.split(',')
+                elements[-1] = elements[-1].strip()
+                try: minilist.append(elements[0])
+                except: pass
+                try: minilist.append(elements[1])
+                except: pass
+            else: pass
             
             valori.append(minilist)
-        
-#controllo formato di prima e seconda riga
-        for item in valori:
-            try: datetime.strptime(item[0],'%Y-%m')
-            except: valori.remove(item)
-        for item in valori:
-            try: item[1] = int(item[1])
-            except: valori.remove(item)
+            
+            for item in valori:
+                try: datetime.strptime(item[0],'%Y-%m')
+                except: valori.remove(item)
+            for item in valori:
+                try: item[1] = int(item[1])
+                except: valori.remove(item)
+                if item[1] == None:
+                    valori.remove(item)
 
+        file.close()
         return valori
 
 
@@ -129,7 +134,7 @@ def compute_avg_monthly_difference(time_series=None, first_year=None, last_year=
     if check_first == False: raise ExamException('Controllare l\'estremo inferiore')
     if check_last == False: raise ExamException('Controllare l\'estremo superiore')
 #-----------------------------------------------------------
-    #val_per_month[i] conterrà tutti i valori (numero di passeggeri) dell'i-esimo mese
+#val_per_month[i] conterrà tutti i valori (numero di passeggeri) dell'i-esimo mese
     val_per_month = []
     for i in range(0,12):
         val_per_month.append([])
@@ -147,14 +152,15 @@ def compute_avg_monthly_difference(time_series=None, first_year=None, last_year=
             sum += 12
         month_index += 1
     
-    #tolgo i valori nulli
     for month in val_per_month:
-        for value in month:
-            if value <= 0:
-                month.remove(value)
-    print(val_per_month)
-
-    #calcolo l'incremento
+        print(month)
+    print()
+#tolgo i valori nulli
+    val_per_month = [[value for value in month if value > 0] for month in val_per_month]
+    
+    print(val_per_month[0])
+    print()
+#calcolo l'incremento
     results = []
     for month in val_per_month:
         if len(month) <= 1:
@@ -171,8 +177,8 @@ def compute_avg_monthly_difference(time_series=None, first_year=None, last_year=
     return results
             
     
-time_series_file = CSVTimeSeriesFile('data.csv')
+time_series_file = CSVTimeSeriesFile('data(copy2).csv')
 time_series = time_series_file.get_data()
 #print(time_series)
 
-print(compute_avg_monthly_difference (time_series, '1954', '1958'))
+print(compute_avg_monthly_difference (time_series, '1949', '1952'))

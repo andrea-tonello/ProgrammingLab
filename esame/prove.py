@@ -62,7 +62,7 @@ class CSVTimeSeriesFile():
 
 
 print('\n')
-time_series_file = CSVTimeSeriesFile('data(copy).csv')
+time_series_file = CSVTimeSeriesFile('data(copy2).csv')
 time_series = time_series_file.get_data()
 print(time_series)
 
