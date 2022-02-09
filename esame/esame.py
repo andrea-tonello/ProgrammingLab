@@ -56,10 +56,61 @@ class CSVTimeSeriesFile():
                 if item[1] == None:
                     valori.remove(item)
 
+        duplicato = any(valori.count(item) > 1 for item in valori)
+        if duplicato == True:
+            raise ExamException('Ci sono dei valori duplicati!')
+
+#controllo ordine: anni
+        year_sort = []
+        for item in valori:
+            date = item[0].split('-')
+            year_sort.append(int(date[0]))
+
+        order_check1 = True
+        if (year_sort != sorted(year_sort)):
+            order_check1 = False
+
+        if order_check1 == False:
+            raise ExamException('Anni non in ordine!')
+
+#controllo ordine: mesi per ogni anno
+        #voglio il numero di anni totali
+        year_sort = list(dict.fromkeys(year_sort))
+        tot_years = len(year_sort)
+        
+        first = year_sort[0]
+        last = year_sort[-1]
+        valori_regrouped = []
+        
+        for i in range(first, last+1):
+            tmplist = []
+            for item in valori:
+                date = item[0].split('-')
+                if str(i) == date[0]:
+                    tmplist.append(date)
+            valori_regrouped.append(tmplist)
+
+        print()
+            
+        #ora che valori_regrouped è organizzata per anno, faccio il check su ogni mese per ogni anno
+        order_check2 = True
+        for item in valori_regrouped:
+            tmplist = []
+            for i in item:
+                tmplist.append(int(i[1]))
+            if (tmplist != sorted(tmplist)):
+                order_check2 = False
+
+        if order_check2 == False:
+            raise ExamException('Mesi non in ordine!')
+
         file.close()
         return valori
 
 
+
+        
+#mi serve a trovare il primo anno assoluto presente nel file
 def find_first(time_series):
     i=0
     res = 0
@@ -72,6 +123,9 @@ def find_first(time_series):
         except: pass
         i += 1
     
+
+
+
         
 #ricorda: devo passare time_series già sanitizzata altrimenti è uno scazzo
 def compute_avg_monthly_difference(time_series=None, first_year=None, last_year=None):
@@ -137,7 +191,7 @@ def compute_avg_monthly_difference(time_series=None, first_year=None, last_year=
     if check_first == False: raise ExamException('Controllare l\'estremo inferiore')
     if check_last == False: raise ExamException('Controllare l\'estremo superiore')
 #-----------------------------------------------------------
-#val_per_month[i] conterrà tutti i valori (numero di passeggeri) dell'i-esimo mese
+
     first = int(first_year)
     last = int(last_year)
     total_years = last - first + 1
@@ -169,7 +223,8 @@ def compute_avg_monthly_difference(time_series=None, first_year=None, last_year=
                     filled_time_series[i][j] = element
 
     flat_time_series = [item for sublist in filled_time_series for item in sublist]
-    
+
+#val_per_month[i] conterrà tutti i valori (numero di passeggeri) dell'i-esimo mese
     val_per_month = []
     for i in range(0,12):
         val_per_month.append([])
@@ -185,15 +240,15 @@ def compute_avg_monthly_difference(time_series=None, first_year=None, last_year=
             sum += 12
         month_index += 1
     
-    #for month in val_per_month:
-    #    print(month)
-    #print()
+    for month in val_per_month:
+        print(month)
+    print()
 #tolgo i valori nulli-------------------------------------------------
     val_per_month = [[value for value in month if value > -1] for month in val_per_month]
     
-    #for month in val_per_month:
-    #    print(month)
-    #print()
+    for month in val_per_month:
+        print(month)
+    print()
 #calcolo l'incremento------------------------------------------------
     results = []
     for month in val_per_month:
@@ -211,8 +266,8 @@ def compute_avg_monthly_difference(time_series=None, first_year=None, last_year=
     return results
             
     
-time_series_file = CSVTimeSeriesFile('data(copy2).csv')
+time_series_file = CSVTimeSeriesFile('data(copy).csv')
 time_series = time_series_file.get_data()
 #print(time_series)
 
-print(compute_avg_monthly_difference (time_series, '1950', '1955'))
+print(compute_avg_monthly_difference (time_series, '1950', '1951'))
