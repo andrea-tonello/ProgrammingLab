@@ -48,7 +48,10 @@ class CSVTimeSeriesFile():
                 try: datetime.strptime(item[0],'%Y-%m')
                 except: valori.remove(item)
             for item in valori:
-                try: item[1] = int(item[1])
+                try: 
+                    item[1] = int(item[1])
+                    if item[1] < 0:
+                        valori.remove(item)
                 except: valori.remove(item)
                 if item[1] == None:
                     valori.remove(item)
@@ -135,32 +138,63 @@ def compute_avg_monthly_difference(time_series=None, first_year=None, last_year=
     if check_last == False: raise ExamException('Controllare l\'estremo superiore')
 #-----------------------------------------------------------
 #val_per_month[i] conterrà tutti i valori (numero di passeggeri) dell'i-esimo mese
+    first = int(first_year)
+    last = int(last_year)
+    total_years = last - first + 1
+        
+    filled_time_series = []
+    for i in range(total_years):
+        filled_time_series.append([])
+        for j in range (0,12):
+            filled_time_series[i].append(['-1',-1])
+
+    time_series2 = []
+
+    for i in range (first, last+1):
+        tmplist = []
+        for item in time_series:
+            date = item[0].split('-')
+            if str(i) == date[0]:
+                tmplist.append(item)
+        time_series2.append(tmplist)
+
+    for i,lista in enumerate(time_series2):
+        for element in lista:
+            date = element[0].split('-')
+            month = date[1]
+            monthint = int(month)
+        
+            for j in range(12):
+                if j == monthint-1:
+                    filled_time_series[i][j] = element
+
+    flat_time_series = [item for sublist in filled_time_series for item in sublist]
+    
     val_per_month = []
     for i in range(0,12):
         val_per_month.append([])
 
-    total_years = int(last_year) - int(first_year) + 1
-
     #devo cercare il primo anno presente in time_series
-    true_first = (find_first(time_series))
+    true_first = (find_first(flat_time_series))
     
-    month_index = (int(first_year) - true_first) * 12
+    month_index = (first - true_first) * 12
     for i in range(0, 12):
         sum = 0
         for j in range(0, total_years):
-            val_per_month[i].append(time_series[month_index+sum][1])
+            val_per_month[i].append(flat_time_series[month_index+sum][1])
             sum += 12
         month_index += 1
     
-    for month in val_per_month:
-        print(month)
-    print()
-#tolgo i valori nulli
-    val_per_month = [[value for value in month if value > 0] for month in val_per_month]
+    #for month in val_per_month:
+    #    print(month)
+    #print()
+#tolgo i valori nulli-------------------------------------------------
+    val_per_month = [[value for value in month if value > -1] for month in val_per_month]
     
-    print(val_per_month[0])
-    print()
-#calcolo l'incremento
+    #for month in val_per_month:
+    #    print(month)
+    #print()
+#calcolo l'incremento------------------------------------------------
     results = []
     for month in val_per_month:
         if len(month) <= 1:
@@ -172,7 +206,7 @@ def compute_avg_monthly_difference(time_series=None, first_year=None, last_year=
                 res = res + (month[i]-month[i-1])
                 i += 1
             #print(res)
-            results.append(res / (total_years-1))
+            results.append(res / (len(month)-1))
 
     return results
             
@@ -181,4 +215,4 @@ time_series_file = CSVTimeSeriesFile('data(copy2).csv')
 time_series = time_series_file.get_data()
 #print(time_series)
 
-print(compute_avg_monthly_difference (time_series, '1949', '1952'))
+print(compute_avg_monthly_difference (time_series, '1950', '1955'))

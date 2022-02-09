@@ -47,23 +47,43 @@ class CSVTimeSeriesFile():
                 try: datetime.strptime(item[0],'%Y-%m')
                 except: valori.remove(item)
             for item in valori:
-                try: item[1] = int(item[1])
+                try: 
+                    item[1] = int(item[1])
+                    if item[1] < 0:
+                        valori.remove(item)
                 except: valori.remove(item)
                 if item[1] == None:
                     valori.remove(item)
         
-            
-        
-#controllo formato di prima e seconda riga
-        
         file.close()
-
         return valori
 
 
-print('\n')
-time_series_file = CSVTimeSeriesFile('data(copy2).csv')
+
+time_series_file = CSVTimeSeriesFile('data(copy).csv')
 time_series = time_series_file.get_data()
 print(time_series)
+print()
+
+total_years = 1951-1949+1
+filled_time_series = []
+for i in range(total_years):
+    filled_time_series.append([])
+    for j in range (0,12):
+        filled_time_series[i].append(['-1',1])
+
+print(filled_time_series)
+print()
+
+'''#for i in range(total_years):
+    
+for item in time_series:
+    date = item[0]
+    y_m = date.split('-')
+    y_m_int = int(y_m[1])
+    for i in range (total_years):
+        filled_time_series.insert((y_m_int-1), [y_m[0]+'-'+y_m[1],item[1]])
+    
+print(filled_time_series)'''
 
 

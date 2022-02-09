@@ -1,39 +1,40 @@
-timeseries = [['a',11],['b',12],['c',0],['d',14],['e',15],['f',16],['g',17],['h',18],['i',19],['j',20],['k',21],['l',22],['a',21],['b',22],['c',23],['d',24],['e',25],['f',26],['g',27],['h',28],['i',29],['j',30],['k',31],['l',0]]
+timeseries = [['1949-04', 129], ['1949-06', 135], ['1949-07', 148], ['1949-08', 148], ['1949-09', 136], ['1949-11', 104], ['1949-12', 118], ['1950-04', 135], ['1950-05', 125], ['1950-06', 149], ['1950-07', 170], ['1950-08', 170], ['1950-09', 158], ['1950-10', 133], ['1950-11', 114], ['1950-12', 140], ['1951-02', 150], ['1951-03', 178], ['1951-04', 163], ['1951-05', 172], ['1951-06', 178], ['1951-07', 199], ['1951-08', 199], ['1951-09', 184], ['1951-10', 162], ['1951-11', 146], ['1951-12', 166]]
 
-tot = 1950-1949+1
-results = []
+total_years = 1951-1949+1
+filled_time_series = []
+for i in range(total_years):
+    filled_time_series.append([])
+    for j in range (0,12):
+        filled_time_series[i].append(['-1',1])
 
-for i in range(0,12):
-    results.append([])
-
-month_index = 0
-for i in range(0,12):
-    sum = 0
-    for j in range(0,tot):
-        results[i].append(timeseries[month_index + sum][1])
-        sum += 12
-    month_index += 1
-
-for month in results:
-        for value in month:
-            if value <= 0:
-                month.remove(value)
-
-print(results)
+print(filled_time_series)
 print()
 
-final = []
-for month in results:
-    if len(month) <= 1:
-        final.append(0)
-    else:
-        res = 0
-        j = 1
-        while j<len(month):
-            res = res + (month[j]-month[j-1])
-            j += 1
-        print(res)
-        final.append(res / (len(month)-1))
-            
+timeseries2 = []
+
+for i in range (1949, 1951+1):
+    tmplist = []
+    for item in timeseries:
+        date = item[0].split('-')
+        if str(i) == date[0]:
+            tmplist.append(item)
+    timeseries2.append(tmplist)
+
+print(timeseries2)
+
+for i,lista in enumerate(timeseries2):
+    for element in lista:
+        date = element[0].split('-')
+        month = date[1]
+        monthint = int(month)
         
-print(final)
+        for j in range(12):
+            if j == monthint-1:
+                filled_time_series[i][j] = element
+
+print()
+print(filled_time_series)
+print()
+flat_time_series = [item for sublist in filled_time_series for item in sublist]
+print(flat_time_series)
+
