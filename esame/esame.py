@@ -83,8 +83,7 @@ class CSVTimeSeriesFile():
         year_sort = list(dict.fromkeys(year_sort))
         tot_years = len(year_sort)
         
-        #già che ci sono controllo che valori non
-        #fosse vuota con un try-except
+        #già che ci sono controllo che valori non fosse vuota con un try-except
         check_empty = True
         try:
             first = year_sort[0]
@@ -288,5 +287,6 @@ def compute_avg_monthly_difference(time_series=None, first_year=None, last_year=
 #print(compute_avg_monthly_difference(time_series, '1949', '1951'))
 
 
-
-#PROVARE A INSTANZIARE UNA TIMESERIES DENTRO DEF E IN CASO ALZARE IL RAISE
+#PROVARE A INSTANZIARE UNA TIMESERIES DENTRO DEF E IN CASO ALZARE IL RAISE -->
+    #se passo una lista "a mano" a compute (che quindi non sia time_series) il programma si schianta
+    #provo a instanziare in compute una lista legit e a paragonarla con quella in input
