@@ -290,3 +290,4 @@ def compute_avg_monthly_difference(time_series=None, first_year=None, last_year=
 #PROVARE A INSTANZIARE UNA TIMESERIES DENTRO DEF E IN CASO ALZARE IL RAISE -->
     #se passo una lista "a mano" a compute (che quindi non sia time_series) il programma si schianta
     #provo a instanziare in compute una lista legit e a paragonarla con quella in input
+    #e nel caso fosse diversa alzare l'eccezione
