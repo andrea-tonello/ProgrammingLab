@@ -59,6 +59,7 @@ class CSVTimeSeriesFile():
                     valori.remove(item)
 
 #ora che ho valori ripulita procedo con i check di duplicati e di ordine
+
 #controllo duplicati
         duplicato = any(valori.count(item) > 1 for item in valori)
         if duplicato == True:
@@ -82,8 +83,15 @@ class CSVTimeSeriesFile():
         year_sort = list(dict.fromkeys(year_sort))
         tot_years = len(year_sort)
         
-        first = year_sort[0]
-        last = year_sort[-1]
+        #già che ci sono controllo che valori non
+        #fosse vuota con un try-except
+        check_empty = True
+        try:
+            first = year_sort[0]
+            last = year_sort[-1]
+        except:
+            check_empty = False
+        if check_empty == False: raise ExamException('Lista valori vuota')
         
         #creo una lista in cui creo una sottolista per ogni anno, in modo tale da verificare
         #la crescenza dei mesi
@@ -272,3 +280,13 @@ def compute_avg_monthly_difference(time_series=None, first_year=None, last_year=
             results.append(res / (len(month)-1))
 
     return results
+
+#time_series_file = CSVTimeSeriesFile(name = None)
+#time_series_file = CSVTimeSeriesFile('data(copy2).csv')
+#time_series = time_series_file.get_data()
+#print(time_series)
+#print(compute_avg_monthly_difference(time_series, '1949', '1951'))
+
+
+
+#PROVARE A INSTANZIARE UNA TIMESERIES DENTRO DEF E IN CASO ALZARE IL RAISE

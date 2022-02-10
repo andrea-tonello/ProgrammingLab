@@ -113,6 +113,7 @@ class CSVTimeSeriesFile():
         return valori
 
 
+time_series_file = CSVTimeSeriesFile(name = None)
 time_series_file = CSVTimeSeriesFile('data(copy).csv')
 time_series = time_series_file.get_data()
 #print(time_series)
